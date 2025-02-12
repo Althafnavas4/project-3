@@ -151,4 +151,49 @@ def add_review(request, pk):
             return redirect('book_list')
     else:
         form = ReviewForm()
-    return render(request, 'admin/add_review.html', {'form': form, 'book': book})
+    return render(request, 'user/add_review.html', {'form': form, 'book': book})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+from .models import Book, Review
+from .forms import ReviewForm
+
+def book_detail(request, book_id):
+    # Fetch the book by ID
+    book = get_object_or_404(Book, pk=book_id)
+
+    # Get all reviews for the book
+    reviews = Review.objects.filter(book=book)
+
+    # Handle review submission
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            # Create a new review
+            review = form.save(commit=False)
+            review.user = request.user
+            review.book = book
+            review.save()
+
+            # Redirect to the same book detail page after review submission
+            return redirect(book_detail, book_id=book.id)
+    else:
+        form = ReviewForm()
+
+    context = {
+        'book': book,
+        'reviews': reviews,
+        'form': form,
+    }
+    
+    return render(request, 'user/book_detail.html', context)
+
+
+
+from django.shortcuts import render
+from .models import Book
+
+def pdf_viewer(request, book_id):
+    book = Book.objects.get(id=book_id)
+    return render(request, 'user/pdf_viewer.html', {'book': book})

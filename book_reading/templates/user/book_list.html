@@ -21,7 +21,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -56,27 +56,58 @@
             background-color: #45a049;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
+        .book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding-top: 20px;
         }
 
-        ul li {
-            background-color: #f9f9f9;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        .book-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        ul li a {
+        .book-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-item img {
+            max-width: 180px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .book-item h3 {
+            font-size: 1.2rem;
             color: #333;
+            margin: 10px 0;
+        }
+
+        .book-item p {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .book-item a {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
         }
 
-        ul li a:hover {
-            color: #4CAF50;
+        .book-item a:hover {
+            background-color: #45a049;
         }
 
         .pagination {
@@ -104,10 +135,26 @@
             color: #333;
             border-radius: 4px;
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .search-bar input[type="text"] {
+                width: 90%;
+            }
+
+            .book-list {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .book-item img {
+                max-width: 150px;
+                height: 200px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Books</h1>
+    <h1>Book Library</h1>
 
     <div class="container">
         <div class="search-bar">
@@ -117,15 +164,18 @@
             </form>
         </div>
 
-        <ul>
+        <div class="book-list">
             {% for book in page_obj %}
-                <li>
-                    <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a> by {{ book.author }}
-                </li>
+                <div class="book-item">
+                    <img src="{{ book.cover_image.url }}" alt="Cover Image">
+                    <h3>{{ book.title }}</h3>
+                    <p>by {{ book.author }}</p>
+                    <a href="{% url 'book_detail' book.id %}">View Details</a>
+                </div>
             {% empty %}
-                <li>No books found.</li>
+                <div>No books found.</div>
             {% endfor %}
-        </ul>
+        </div>
 
         <div class="pagination">
             <span class="step-links">

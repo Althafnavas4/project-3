@@ -4,38 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book.title }}</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1, h3 {
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .book-cover {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .book-cover img {
+            max-width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-details {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .book-details h3 {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .book-description {
+            margin: 20px 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #666;
+            text-align: justify;
+        }
+
+        .button {
+            display: block;
+            text-align: center;
+            background-color: #6c7cfc;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 30px 0;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #5a67d8;
+        }
+
+        .reviews-section {
+            margin-top: 50px;
+        }
+
+        .review {
+            padding: 15px;
+            background-color: #f4f4f4;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .review p {
+            margin: 5px 0;
+        }
+
+        .review strong {
+            color: #333;
+        }
+
+        .review-rating {
+            color: #ffd700;
+        }
+
+        .review-comment {
+            color: #444;
+        }
+
+        /* Form Styles */
+        form {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        form button {
+            background-color: #6c7cfc;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form button:hover {
+            background-color: #5a67d8;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .book-cover img {
+                max-width: 150px;
+            }
+
+            .button {
+                font-size: 1rem;
+                padding: 10px 18px;
+            }
+
+            .reviews-section {
+                margin-top: 30px;
+            }
+
+            .review {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ book.title }}</h1>
-    <h3>by {{ book.author }}</h3>
-    <p>{{ book.description }}</p>
-    <img src="{{ book.cover_image.url }}" alt="Cover Image" width="200">
-    <a href="{{ book.file.url }}" target="_blank">Read Book</a>
-
-    <h2>Reviews</h2>
-    {% for review in reviews %}
-        <div>
-            <p><strong>{{ review.user.username }}</strong> rated it {{ review.rating }} out of 5</p>
-            <p>{{ review.comment }}</p>
+    <div class="container">
+        <h1>{{ book.title }}</h1>
+        <div class="book-cover">
+            <img src="{{ book.cover_image.url }}" alt="Cover Image">
         </div>
-    {% empty %}
-        <p>No reviews yet. Be the first to review!</p>
-    {% endfor %}
+        <div class="book-details">
+            <h3>by {{ book.author }}</h3>
+            <p class="book-description">{{ book.description }}</p>
+            <a href="{% url 'pdf_viewer' book.id %}" class="button">Read Book</a>
 
-    {% if user.is_authenticated %}
-        <h3>Add a Review</h3>
-        <form method="POST">
-            {% csrf_token %}
-            <label for="rating">Rating (1-5):</label>
-            <input type="number" name="rating" id="rating" min="1" max="5" required>
-            <br>
-            <label for="comment">Comment:</label>
-            <textarea name="comment" id="comment" required></textarea>
-            <br>
-            <button type="submit">Submit Review</button>
-        </form>
-    {% else %}
-        <p><a href="{% url 'login' %}">Login</a> to add a review.</p>
-    {% endif %}
+            
+
+        </div>  
+
+        <div class="reviews-section">
+            <h2>Reviews</h2>
+            {% for review in reviews %}
+                <div class="review">
+                    <p><strong>{{ review.user.username }}</strong> rated it 
+                    <span class="review-rating">{{ review.rating }} out of 5</span></p>
+                    <p class="review-comment">{{ review.comment }}</p>
+                </div>
+            {% empty %}
+                <p>No reviews yet. Be the first to review!</p>
+            {% endfor %}
+        </div>
+
+        {% if user.is_authenticated %}
+            <h3>Add a Review</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <label for="rating">Rating (1-5):</label>
+                <input type="number" name="rating" id="rating" min="1" max="5" required>
+                <br>
+                <label for="comment">Comment:</label>
+                <textarea name="comment" id="comment" required></textarea>
+                <br>
+                <button type="submit">Submit Review</button>
+            </form>
+        {% else %}
+            <p><a href="{% url 'login' %}">Login</a> to add a review.</p>
+        {% endif %}
+    </div>
 </body>
 </html>

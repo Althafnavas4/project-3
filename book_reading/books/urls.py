@@ -13,4 +13,18 @@ urlpatterns = [
     path('manage_books/', views.manage_books, name='manage_books'),
     path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),
     path('add_review/<int:pk>/', views.add_review, name='add_review'),
+    path('book/<int:book_id>/', views.book_detail, name='book_detail'),
+    path('book/<int:book_id>/view/', views.pdf_viewer, name='pdf_viewer'),
 ]
+
+
+
+
+
+
+
+
+
+
+   
+
