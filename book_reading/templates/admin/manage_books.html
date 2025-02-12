@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        h1 {
+            margin: 20px 0;
+        }
+        nav {
+            background-color: #444;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+        }
+        nav a:hover {
+            background-color: #333;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        .btn-logout {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-logout:hover {
+            background-color: #c9302c;
+        }
+        .book-details {
+            margin: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .book-details img {
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Manage Books</h1>
+    </header>
+
+    <nav>
+        <a href="{% url 'add_book' %}">Add New Book</a>
+        <div>
+            <!-- Assuming you have a check for whether a user is logged in or not -->
+            {% if user.is_authenticated %}
+                <button class="btn-logout" onclick="window.location.href='{% url 'book_logout' %}'">Logout</button>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>
+                    <a href="{% url 'edit_book' book.pk %}">Edit</a>
+                    <a href="{% url 'book_detail' book.pk %}">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Book Details Page -->
+    {% if book %}
+    <div class="book-details">
+        <h1>{{ book.title }}</h1>
+        <h3>by {{ book.author }}</h3>
+        <p>{{ book.description }}</p>
+        <img src="{{ book.cover_image.url }}" alt="Cover Image" width="200">
+        <a href="{{ book.file.url }}" target="_blank">Read Book</a>
+    </div>
+    {% endif %}
+
+</body>
+</html>
