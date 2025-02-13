@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,36 +14,40 @@
             box-sizing: border-box;
         }
 
-        /* Body Styling for Book-like Feel */
+        /* Body Styling for PDF App-like Feel */
         body {
-            font-family: 'Georgia', serif;
-            background-color: #f8f3e2; /* Soft parchment-like background */
-            color: #4a4a4a; /* Dark grey text for easy reading */
-            line-height: 0;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #fafafa; /* Soft background */
+            color: #333; /* Dark grey text for readability */
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+            justify-content: flex-start;
         }
 
         /* Navbar Styling */
         nav {
-            background-color: #b15c52;
+            background-color: #333;
             color: white;
-            padding: 15px 20px;
+            padding: 10px 20px;
             width: 100%;
-            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         nav a {
             color: white;
             text-decoration: none;
-            margin: 0 20px;
-            font-size: 20px;
-            font-weight: bold;
+            margin: 0 15px;
+            font-size: 18px;
         }
 
         nav a:hover {
@@ -50,78 +55,115 @@
         }
 
         /* Main Content Styling */
-        h1, h3 {
+        h1 {
             text-align: center;
-            font-family: 'Georgia', serif;
-            margin: 20px 0;
+            font-family: 'Arial', sans-serif;
+            margin-top: 20px;
             color: #2c3e50;
+            font-size: 2rem;
+        }
+
+        h3 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            color: #7f8c8d;
+            font-size: 1.2rem;
         }
 
         p {
             text-align: center;
-            font-size: 18px;
-            margin: 20px 0;
-            max-width: 800px;
+            margin: 15px 0;
+            font-size: 1rem;
             color: #333;
+            max-width: 800px;
         }
 
+        /* PDF Viewer Container */
         #pdf-container {
-            width: 74%;
-            height: 670px;
-            margin: 0px auto;
-            overflow: auto;
+            display: flex;
+            width: 100%;
+            max-width: 960px;
+            height: 721px;
+            margin: 30px auto;
+            overflow: hidden;
             background-color: #fff;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             border: 1px solid #ddd;
         }
 
-        /* Controls Styling */
-        #controls {
-            text-align: center;
-            margin-top: 20px;
+        /* PDF page container for side by side */
+        .page {
+            flex: 1;
+            display: inline-block;
         }
 
-        .zoom-btn, .page-controls button {
+        /* Controls Styling */
+        #controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .zoom-btn,
+        .page-controls button {
             padding: 12px 18px;
-            background-color: #b15c52;
+            background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            margin: 5px 15px;
             transition: background-color 0.3s ease;
         }
 
-        .zoom-btn:hover, .page-controls button:hover {
-            background-color: #9c4d3d;
+        .zoom-btn:hover,
+        .page-controls button:hover {
+            background-color: #2980b9;
         }
 
+        /* Page Navigation Controls */
         .page-controls {
-            display: inline-block;
-            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .page-controls button {
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .page-controls .current-page {
+            margin: 0 10px;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         /* Footer Styling */
         footer {
             text-align: center;
             padding: 10px;
-            background-color: #b15c52;
+            background-color: #333;
             color: white;
             width: 100%;
             position: fixed;
             bottom: 0;
+            font-size: 14px;
         }
 
     </style>
 </head>
+
 <body>
     <!-- Navigation Bar -->
     <nav>
         <a href="{% url 'book_list' %}">Home</a>
-        <a href="/library">Library</a>
-        <a href="/about">About</a>
+        <a href="{% url 'favorite_books' %}">Favorite</a>
+       
     </nav>
 
     <!-- Main Content -->
@@ -131,22 +173,25 @@
     <!-- Display Book Description -->
     <p>{{ book.description }}</p>
 
+    <!-- PDF Viewer Container -->
     <div id="pdf-container"></div>
 
+    <!-- Controls for Zoom and Navigation -->
     <div id="controls">
-        <!-- Zoom In/Out Controls -->
+        <!-- Zoom Controls -->
         <button class="zoom-btn" onclick="zoomIn()">Zoom In</button>
         <button class="zoom-btn" onclick="zoomOut()">Zoom Out</button>
 
         <!-- Page Navigation Controls -->
         <div class="page-controls">
-            <button onclick="previousPage()">Previous Page</button>
-            <button onclick="nextPage()">Next Page</button>
+            <button onclick="previousPage()">Previous</button>
+            <span class="current-page" id="current-page">Page 1</span>
+            <button onclick="nextPage()">Next</button>
         </div>
     </div>
 
     <!-- Footer -->
-    
+   
 
     <script>
         var url = "{{ book.file.url }}"; // PDF file URL passed from Django view
@@ -160,63 +205,76 @@
             pdfjsLib.getDocument(url).promise.then(function(pdf) {
                 pdfDoc = pdf;
                 totalPages = pdf.numPages;
-                renderPage(currentPage);
+                renderPages(currentPage);
             });
         }
 
-        // Render a specific page
-        function renderPage(pageNum) {
-            pdfDoc.getPage(pageNum).then(function(page) {
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                var viewport = page.getViewport({ scale: zoomLevel });
+        // Render two pages side by side
+        function renderPages(pageNum) {
+            // Clear the container
+            var container = document.getElementById('pdf-container');
+            container.innerHTML = '';
 
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+            var pageNumbers = [pageNum, pageNum + 1]; // Get two pages
+            pageNumbers.forEach(function(num) {
+                if (num <= totalPages) {
+                    pdfDoc.getPage(num).then(function(page) {
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+                        var viewport = page.getViewport({ scale: zoomLevel });
 
-                // Render PDF page to canvas
-                page.render({ canvasContext: ctx, viewport: viewport });
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
 
-                // Clear the current PDF container and add the new page
-                var container = document.getElementById('pdf-container');
-                container.innerHTML = '';
-                container.appendChild(canvas);
+                        // Render PDF page to canvas
+                        page.render({ canvasContext: ctx, viewport: viewport });
+
+                        // Create a page container and add the canvas
+                        var pageContainer = document.createElement('div');
+                        pageContainer.classList.add('page');
+                        pageContainer.appendChild(canvas);
+                        container.appendChild(pageContainer);
+                    });
+                }
             });
+
+            // Update current page number
+            document.getElementById('current-page').textContent = `Page ${pageNum}`;
         }
 
-        // Zoom in function
+        // Zoom In function
         function zoomIn() {
             zoomLevel += 0.1; // Increase zoom level
-            renderPage(currentPage);
+            renderPages(currentPage);
         }
 
-        // Zoom out function
+        // Zoom Out function
         function zoomOut() {
             zoomLevel = Math.max(0.1, zoomLevel - 0.1); // Prevent zooming out too much
-            renderPage(currentPage);
+            renderPages(currentPage);
         }
 
         // Go to the next page
         function nextPage() {
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderPage(currentPage);
+            if (currentPage < totalPages - 1) {
+                currentPage += 2;
+                renderPages(currentPage);
             }
         }
 
         // Go to the previous page
         function previousPage() {
             if (currentPage > 1) {
-                currentPage--;
-                renderPage(currentPage);
+                currentPage -= 2;
+                renderPages(currentPage);
             }
         }
 
         // Initialize the PDF viewer when the page is loaded
-        window.onload = function() {
+        window.onload = function () {
             renderPDF();
         };
     </script>
 </body>
-</html>
 
+</html>

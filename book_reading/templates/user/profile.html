@@ -1,0 +1,26 @@
+
+<!-- user/profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>Your Profile</h1>
+    <div>
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px;">
+        {% else %}
+            <img src="{% static 'default-profile-pic.jpg' %}" alt="Profile Picture" style="width: 150px; height: 150px;">
+        {% endif %}
+        <p><strong>Name:</strong> {{ profile.name }}</p>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
+        <p><strong>Phone:</strong> {{ profile.phone }}</p>
+        <p><strong>Address:</strong> {{ profile.address }}</p>
+        <p><strong>Bio:</strong> {{ profile.bio }}</p>
+    </div>
+    <a href="{% url 'edit_profile' %}">Edit Profile</a>
+</body>
+</html>

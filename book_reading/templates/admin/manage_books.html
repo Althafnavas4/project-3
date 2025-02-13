@@ -68,6 +68,20 @@
             margin-top: 20px;
             border-radius: 5px;
         }
+        .btn-logout {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* remove underline */
+}
+
+        .btn-logout:hover {
+    background-color: #d32f2f;
+}
+
     </style>
 </head>
 <body>
@@ -81,9 +95,11 @@
         <div>
             <!-- Assuming you have a check for whether a user is logged in or not -->
             {% if user.is_authenticated %}
-                <button class="btn-logout" onclick="window.location.href='{% url 'book_logout' %}'">Logout</button>
+            <a href="{% url 'book_logout' %}" class="btn-logout">Logout</a>
+
+
             {% else %}
-                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'book_login' %}">Login</a>
             {% endif %}
         </div>
     </nav>

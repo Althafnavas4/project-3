@@ -197,3 +197,118 @@ from .models import Book
 def pdf_viewer(request, book_id):
     book = Book.objects.get(id=book_id)
     return render(request, 'user/pdf_viewer.html', {'book': book})
+
+
+
+
+
+# views.py
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Book, Favorite
+from django.contrib import messages
+
+def toggle_favorite(request, book_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "You need to be logged in to add a book to your favorites.")
+        return redirect('book_list')
+
+    book = get_object_or_404(Book, id=book_id)
+
+    # Check if the book is already in the user's favorites
+    favorite, created = Favorite.objects.get_or_create(user=request.user, book=book)
+
+    if not created:
+        # If the book is already in favorites, delete it (removes it from favorites)
+        favorite.delete()
+        messages.success(request, f"{book.title} has been removed from your favorites.")
+    else:
+        messages.success(request, f"{book.title} has been added to your favorites.")
+    
+    return redirect(favorite_books)
+
+
+
+# views.py
+
+# views.py
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Book, Favorite
+from django.contrib import messages
+
+def remove_favorite(request, book_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "You need to be logged in to remove a book from your favorites.")
+        return redirect('book_list')
+
+    book = get_object_or_404(Book, id=book_id)
+
+    # Check if the book is already in the user's favorites
+    try:
+        favorite = Favorite.objects.get(user=request.user, book=book)
+        favorite.delete()
+        messages.success(request, f"{book.title} has been removed from your favorites.")
+    except Favorite.DoesNotExist:
+        messages.warning(request, "This book is not in your favorites.")
+    
+    return redirect('favorite_books')  # Redirect to the page that shows user's favorites
+
+
+
+
+
+# views.py
+
+def favorite_books(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "You need to be logged in to view your favorite books.")
+        return redirect('book_list')
+
+    favorites = Favorite.objects.filter(user=request.user)
+    favorite_books = [favorite.book for favorite in favorites]
+
+    return render(request, 'user/favorite_books.html', {'favorite_books': favorite_books})
+
+
+
+
+
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Profile
+from .forms import ProfileForm
+
+# View for displaying the user profile
+def user_profile(request):
+    user = request.user
+    try:
+        profile = user.profile
+    except Profile.DoesNotExist:
+        profile = None
+
+    return render(request, 'user/profile.html', {'user': user, 'profile': profile})
+
+# View for editing the user profile
+def edit_profile(request):
+    user = request.user
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully.")
+            return redirect('user_profile')  # Redirect to the profile view
+        else:
+            messages.error(request, "Please correct the error below.")
+    else:
+        form = ProfileForm(instance=user.profile)
+    
+    return render(request, 'user/edit_profile.html', {'form': form, 'user': user})
+
+
+
+
+
