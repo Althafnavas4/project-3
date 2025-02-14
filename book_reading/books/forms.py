@@ -23,7 +23,7 @@ from .models import Profile
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['name', 'email', 'phone', 'address', 'bio', 'profile_picture']  # Including new fields
+        fields = ['name', 'email', 'phone', 'address', 'bio' , ]  # Including new fields
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3, 'cols': 40}),
             'address': forms.Textarea(attrs={'rows': 4, 'cols': 40}),

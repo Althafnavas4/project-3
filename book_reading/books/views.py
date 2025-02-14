@@ -283,20 +283,39 @@ from .models import Profile
 from .forms import ProfileForm
 
 # View for displaying the user profile
+from django.shortcuts import render, redirect
+from .models import Profile
+
 def user_profile(request):
     user = request.user
     try:
+      
         profile = user.profile
     except Profile.DoesNotExist:
-        profile = None
-
+       
+        profile = Profile.objects.create(user=user)
+        
+    
     return render(request, 'user/profile.html', {'user': user, 'profile': profile})
 
+
 # View for editing the user profile
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import ProfileForm
+from .models import Profile
+
 def edit_profile(request):
     user = request.user
+    
+    # Check if the user has a profile, if not, create it
+    try:
+        profile = user.profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=user)
+    
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully.")
@@ -304,9 +323,10 @@ def edit_profile(request):
         else:
             messages.error(request, "Please correct the error below.")
     else:
-        form = ProfileForm(instance=user.profile)
+        form = ProfileForm(instance=profile)
     
     return render(request, 'user/edit_profile.html', {'form': form, 'user': user})
+
 
 
 

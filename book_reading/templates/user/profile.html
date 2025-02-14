@@ -1,30 +1,170 @@
-
-<!-- user/profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container to hold the profile information */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        /* Main heading style */
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 2.8rem;
+            margin-bottom: 30px;
+        }
+
+        /* Profile Picture Section */
+        .profile-pic {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .profile-pic img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #4CAF50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Profile Information Section */
+        .profile-info {
+            margin-bottom: 30px;
+        }
+
+        .profile-info p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin: 12px 0;
+        }
+
+        .profile-info strong {
+            color: #555;
+            font-weight: bold;
+        }
+
+        /* Edit Profile Button */
+        a.edit-profile {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            width: fit-content;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 20px;
+        }
+
+        a.edit-profile:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* Information Card Styling */
+        .info-card {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card p {
+            margin: 10px 0;
+        }
+
+        .info-card strong {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .profile-info p {
+                font-size: 1rem;
+            }
+
+            .profile-pic img {
+                width: 100px;
+                height: 100px;
+            }
+
+            a.edit-profile {
+                padding: 10px 20px;
+            }
+        }
+    </style>
 </head>
 <body>
+
+<div class="container">
     <h1>Your Profile</h1>
-    <div>
+
+    <!-- Profile Picture Section -->
+    <div class="profile-pic">
+        <!-- Check if profile picture exists -->
         {% if profile.profile_picture %}
-            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px;">
+            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
         {% else %}
-            <img src="{% static 'default-profile-pic.jpg' %}" alt="Profile Picture" style="width: 150px; height: 150px;">
+            <img src="https://via.placeholder.com/120" alt="Profile Picture">
         {% endif %}
-        <p><strong>Name:</strong> {{ profile.name }}</p>
-        <p><strong>Email:</strong> {{ profile.email }}</p>
-        <p><strong>Phone:</strong> {{ profile.phone }}</p>
-        <p><strong>Address:</strong> {{ profile.address }}</p>
-        <p><strong>Bio:</strong> {{ profile.bio }}</p>
     </div>
-    <a href="{% url 'edit_profile' %}">Edit Profile</a>
+
+    <!-- Profile Information Section -->
+    <div class="profile-info">
+        <div class="info-card">
+            <p><strong>Name:</strong> {{ profile.user.get_full_name }}</p>
+            <p><strong>Email:</strong> {{ profile.user.email }}</p>
+        </div>
+
+        <div class="info-card">
+            <p><strong>Phone:</strong> {{ profile.phone }}</p>
+            <p><strong>Address:</strong> {{ profile.address }}</p>
+        </div>
+
+        <div class="info-card">
+            <p><strong>Bio:</strong> {{ profile.bio }}</p>
+        </div>
+    </div>
+
+    <!-- Edit Profile Button -->
+    <a class="edit-profile" href="{% url 'edit_profile' %}">Edit Profile</a>
+</div>
+
 </body>
 </html>
-
-
-
-<!-- aaaaaaaaaaaaaaaa -->
