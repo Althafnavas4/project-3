@@ -153,31 +153,37 @@ def add_review(request, pk):
         form = ReviewForm()
     return render(request, 'user/add_review.html', {'form': form, 'book': book})
 
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Book, Review
 from .forms import ReviewForm
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from .models import Profile
 
 def book_detail(request, book_id):
-    # Fetch the book by ID
     book = get_object_or_404(Book, pk=book_id)
 
-    # Get all reviews for the book
+    user_profile = None
+    if request.user.is_authenticated:
+        try:
+            user_profile = request.user.profile
+        except Profile.DoesNotExist:
+            user_profile = None
+
     reviews = Review.objects.filter(book=book)
 
-    # Handle review submission
+    # Create a range for the rating
+    star_range = [1, 2, 3, 4, 5]
+
     if request.method == 'POST' and request.user.is_authenticated:
         form = ReviewForm(request.POST)
         if form.is_valid():
-            # Create a new review
             review = form.save(commit=False)
             review.user = request.user
             review.book = book
             review.save()
-
-            # Redirect to the same book detail page after review submission
-            return redirect(book_detail, book_id=book.id)
+            return redirect('book_detail', book_id=book.id)
     else:
         form = ReviewForm()
 
@@ -185,14 +191,25 @@ def book_detail(request, book_id):
         'book': book,
         'reviews': reviews,
         'form': form,
+        'user_profile': user_profile,
+        'star_range': star_range,  # Add this to context
     }
-    
+
     return render(request, 'user/book_detail.html', context)
 
 
+# Optionally, you may want to allow authenticated users to delete their reviews:
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
 
-from django.shortcuts import render
-from .models import Book
+    # Ensure the user is deleting their own review
+    if review.user != request.user:
+        return HttpResponse("You are not authorized to delete this review.", status=403)
+
+    review.delete()
+    return redirect('book_detail', book_id=review.book.id)
+
 
 def pdf_viewer(request, book_id):
     book = Book.objects.get(id=book_id)
@@ -275,40 +292,43 @@ def favorite_books(request):
 
 
 
-
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .models import Profile
 from .forms import ProfileForm
 
-# View for displaying the user profile
+# Display User Profile
 from django.shortcuts import render, redirect
-from .models import Profile
+from django.contrib.auth.decorators import login_required
+from .models import Profile, Favorite  # Import your models
 
+@login_required
 def user_profile(request):
     user = request.user
+
+    # Check if the profile exists, if not, create it
     try:
-      
         profile = user.profile
     except Profile.DoesNotExist:
-       
         profile = Profile.objects.create(user=user)
-        
-    
-    return render(request, 'user/profile.html', {'user': user, 'profile': profile})
+
+    # Fetch favorite books for the user
+    favorite_books = Favorite.objects.filter(user=user)
+    favorite_books_list = [favorite.book for favorite in favorite_books]  # Assuming 'book' is a field in the Favorite model
+
+    # Pass data to the template
+    return render(request, 'user/profile.html', {
+        'user': user,
+        'profile': profile,
+        'favorite_books': favorite_books_list,  # Pass the list of favorite books
+    })
 
 
-# View for editing the user profile
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import ProfileForm
-from .models import Profile
-
+# Edit User Profile and Upload Profile Picture
+@login_required
 def edit_profile(request):
     user = request.user
-    
-    # Check if the user has a profile, if not, create it
     try:
         profile = user.profile
     except Profile.DoesNotExist:
@@ -319,13 +339,59 @@ def edit_profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully.")
-            return redirect('user_profile')  # Redirect to the profile view
+            return redirect('user_profile')  # Redirect to profile view
         else:
-            messages.error(request, "Please correct the error below.")
+            messages.error(request, "Please correct the errors below.")
     else:
         form = ProfileForm(instance=profile)
     
     return render(request, 'user/edit_profile.html', {'form': form, 'user': user})
+
+# Upload Profile Picture (Separate Form)
+@login_required
+def upload_profile_picture(request):
+    if request.method == 'POST' and request.FILES['profile_picture']:
+        profile = Profile.objects.get(user=request.user)
+        profile.profile_picture = request.FILES['profile_picture']
+        profile.save()
+        messages.success(request, "Profile picture updated successfully.")
+        return redirect('user_profile')  # Redirect to profile page
+    return render(request, 'user/upload_profile_picture.html')
+
+
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse, Http404
+from django.contrib import messages  # Importing messages for feedback
+from .models import Book
+
+def download_book(request, book_id):
+    # Get the book by its ID
+    book = get_object_or_404(Book, id=book_id)
+
+    # Check if the book has an associated file
+    if not book.file:
+        messages.error(request, "This book does not have a downloadable file.")
+        return render(request, 'book_details.html', {'book': book})  # Redirecting back to the book details page
+    
+    # Attempt to open and serve the file in binary mode
+    try:
+        with open(book.file.path, 'rb') as f:
+            # Set the appropriate content type
+            response = HttpResponse(f.read(), content_type='application/pdf')  # Assuming the file is a PDF
+            response['Content-Disposition'] = f'attachment; filename="{book.title}.pdf"'
+            
+            # Add success message
+            messages.success(request, f"Your download of {book.title} has started!")
+            return response
+    except FileNotFoundError:
+        messages.error(request, "The requested book file was not found.")
+        return render(request, 'book_details.html', {'book': book})  # Redirect back to the book details page
+
+
+
+
+
+
 
 
 

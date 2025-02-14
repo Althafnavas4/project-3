@@ -1,155 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Your Profile</title>
     <style>
-        /* General body styling */
+        /* General styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
+            background-color: #1a1a1a; /* Dark background */
             margin: 0;
             padding: 0;
+            color: #fff; /* White text for contrast */
         }
 
-        /* Container to hold the profile information */
+        /* Navigation Styling */
+        .navbar {
+            background-color: #ff6600; /* Orange navbar */
+            padding: 15px;
+            color: white;
+            text-align: center;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            margin: 0 10px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: #e65c00; /* Darker orange on hover */
+        }
+
+        /* Main Content Styling */
         .container {
-            width: 90%;
+            width: 80%;
             max-width: 900px;
-            margin: 50px auto;
+            margin: 30px auto;
             padding: 30px;
-            background-color: white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: #333; /* Dark background for the content */
             border-radius: 12px;
-            transition: transform 0.3s ease-in-out;
-        }
-        .container:hover {
-            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Main heading style */
         h1 {
             text-align: center;
-            color: #4CAF50;
-            font-size: 2.8rem;
+            color: #ff6600; /* Orange text */
+            font-size: 2rem;
             margin-bottom: 30px;
         }
 
-        /* Profile Picture Section */
         .profile-pic {
             display: flex;
             justify-content: center;
             margin-bottom: 30px;
         }
+
         .profile-pic img {
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            border: 4px solid #4CAF50;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 4px solid #ff6600; /* Orange border */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Profile Information Section */
-        .profile-info {
-            margin-bottom: 30px;
-        }
-
-        .profile-info p {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            margin: 12px 0;
-        }
-
-        .profile-info strong {
-            color: #555;
-            font-weight: bold;
-        }
-
-        /* Edit Profile Button */
-        a.edit-profile {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            text-align: center;
-            width: fit-content;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            margin-top: 20px;
-        }
-
-        a.edit-profile:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-
-        /* Information Card Styling */
         .info-card {
+            margin: 20px 0;
             padding: 20px;
-            margin-bottom: 20px;
+            background-color: #444; /* Dark card background */
             border-radius: 8px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .info-card p {
-            margin: 10px 0;
+            font-size: 1.2rem;
+            color: #ddd; /* Light text color */
+            margin-bottom: 15px;
         }
 
         .info-card strong {
-            font-size: 1.1rem;
-            color: #333;
+            color: #ff6600; /* Orange text for strong labels */
+            font-weight: bold;
         }
 
-        /* Responsive styling */
+        .favorite-books-card {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #444; /* Dark card background */
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .favorite-books-card h2 {
+            color: #ff6600; /* Orange text */
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .favorite-books-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .favorite-books-list li {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .favorite-books-list li img {
+            width: 50px;
+            height: 75px;
+            margin-right: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-profile-link {
+            text-decoration: none;
+            color: #ff6600; /* Orange text */
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .edit-profile-link:hover {
+            color: #e65c00; /* Darker orange on hover */
+        }
+
         @media (max-width: 768px) {
             .container {
+                width: 90%;
                 padding: 20px;
             }
 
             h1 {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
 
-            .profile-info p {
+            .info-card p {
                 font-size: 1rem;
             }
 
             .profile-pic img {
-                width: 100px;
-                height: 100px;
+                width: 120px;
+                height: 120px;
             }
 
-            a.edit-profile {
-                padding: 10px 20px;
+            .edit-profile-link {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>Your Profile</h1>
-
-    <!-- Profile Picture Section -->
-    <div class="profile-pic">
-        <!-- Check if profile picture exists -->
-        {% if profile.profile_picture %}
-            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
-        {% else %}
-            <img src="https://via.placeholder.com/120" alt="Profile Picture">
-        {% endif %}
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="{% url 'book_list' %}">Home</a>
+        <a href="{% url 'user_profile' %}">Profile</a>
+        <a href="{% url 'favorite_books' %}">Favorite Books</a>
+        <a href="{% url  'book_logout' %}">Logout</a>
     </div>
 
-    <!-- Profile Information Section -->
-    <div class="profile-info">
+    <div class="container">
+        <h1>{{ user.get_full_name }}</h1>
+
+        <!-- Profile Picture Section -->
+        <div class="profile-pic">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+            {% else %}
+                <img src="https://via.placeholder.com/150" alt="Profile Picture">
+            {% endif %}
+        </div>
+
+        <!-- Profile Information -->
         <div class="info-card">
-            <p><strong>Name:</strong> {{ profile.user.get_full_name }}</p>
-            <p><strong>Email:</strong> {{ profile.user.email }}</p>
+            <p><strong>Name:</strong> {{ user.get_full_name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
 
         <div class="info-card">
@@ -160,11 +198,32 @@
         <div class="info-card">
             <p><strong>Bio:</strong> {{ profile.bio }}</p>
         </div>
+
+        <!-- Favorite Books Section -->
+        <div class="favorite-books-card">
+            <h2>Your Favorite Books</h2>
+            {% if favorite_books %}
+                <ul class="favorite-books-list">
+                    {% for book in favorite_books %}
+                        <li>
+                            {% if book.cover_image %}
+                                <img src="{{ book.cover_image.url }}" alt="{{ book.title }} Image">
+                            {% else %}
+                                <img src="https://via.placeholder.com/50x75" alt="Book Image">
+                            {% endif %}
+                            <span>{{ book.title }} by {{ book.author }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You don't have any favorite books yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Link to Edit Profile -->
+        <a class="edit-profile-link" href="{% url 'edit_profile' %}">Edit Profile</a>
     </div>
 
-    <!-- Edit Profile Button -->
-    <a class="edit-profile" href="{% url 'edit_profile' %}">Edit Profile</a>
-</div>
-
 </body>
+
 </html>

@@ -19,7 +19,13 @@ urlpatterns = [
     path('favorites/', views.favorite_books, name='favorite_books'),
     path('book/<int:book_id>/remove-favorite/', views.remove_favorite, name='remove_favorite'),
     path('profile/', views.user_profile, name='user_profile'),
-    path('profile/edit/', views.edit_profile, name='edit_profile')
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('upload-profile-picture/', views.upload_profile_picture, name='upload_profile_picture'),
+    path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),
+    path('book/download/<int:book_id>/', views.download_book, name='download_book'),
+   
+
+
         # New URL for removing a favorite
 ]
 

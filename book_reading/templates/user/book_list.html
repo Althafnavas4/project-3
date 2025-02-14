@@ -11,10 +11,10 @@
         /* Body */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f5f5f5;
+            background-color: #111; /* Dark background */
             margin: 0;
             padding: 0;
-            color: #333;
+            color: #fff; /* White text for contrast */
             line-height: 1.6;
         }
 
@@ -22,7 +22,7 @@
         h1 {
             text-align: center;
             padding: 10px;
-            background-color: #3498db;
+            background-color: #e67e22; /* Orange background */
             color: white;
             margin: 0;
             font-size: 3.5rem;
@@ -34,13 +34,13 @@
         }
 
         h1:hover {
-            background-color: #2980b9;
+            background-color: #d35400; /* Darker orange on hover */
             transform: scale(1.05);
         }
 
         /* Navigation Bar */
         nav {
-            background-color: #3498db;
+            background-color: #e67e22; /* Orange background */
             padding: 15px;
             position: sticky;
             top: 0;
@@ -50,7 +50,7 @@
         }
 
         nav:hover {
-            background-color: #2980b9;
+            background-color: #d35400; /* Darker orange on hover */
         }
 
         nav ul {
@@ -80,7 +80,7 @@
         }
 
         nav ul li a:hover {
-            background-color: #2980b9;
+            background-color: #d35400; /* Darker orange */
             transform: translateY(-3px);
         }
 
@@ -93,13 +93,13 @@
         }
 
         .book-item {
-            background-color: #fff;
+            background-color: #222; /* Dark background for book items */
             padding: 25px;
             border-radius: 15px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
-            border: 1px solid #eee;
+            border: 1px solid #444; /* Lighter border for separation */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -118,25 +118,25 @@
 
         .book-item h3 {
             font-size: 1.8rem;
-            color: #333;
+            color: #e67e22; /* Orange text */
             margin: 20px 0;
             font-weight: 600;
             transition: color 0.3s ease;
         }
 
         .book-item h3:hover {
-            color: #3498db;
+            color: #d35400; /* Darker orange on hover */
         }
 
         .book-item p {
-            color: #777;
+            color: #bbb; /* Lighter grey text */
             font-size: 1rem;
             margin-bottom: 20px;
         }
 
         .book-item a {
             display: inline-block;
-            background-color: #3498db;
+            background-color: #e67e22; /* Orange background */
             color: white;
             padding: 12px 20px;
             border-radius: 30px;
@@ -146,7 +146,7 @@
         }
 
         .book-item a:hover {
-            background-color: #2980b9;
+            background-color: #d35400; /* Darker orange on hover */
             transform: scale(1.05);
         }
 
@@ -181,7 +181,7 @@
         .pagination .step-links a {
             padding: 14px 22px;
             margin: 0 12px;
-            background-color: #3498db;
+            background-color: #e67e22; /* Orange background */
             color: white;
             text-decoration: none;
             border-radius: 30px;
@@ -190,7 +190,7 @@
         }
 
         .pagination .step-links a:hover {
-            background-color: #2980b9;
+            background-color: #d35400; /* Darker orange on hover */
         }
 
         .pagination .current {
@@ -238,17 +238,18 @@
             <li><a href="{% url 'favorite_books' %}">My Books</a></li>
             <li><a href="{% url 'book_list' %}">Home</a></li>
             <li><a href="#" id="search-link">Search</a></li>
-            <li><a href="{% url 'book_logout' %}">Log out</a></li>
             <li><a href="{% url 'user_profile' %}"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="{% url 'book_logout' %}">Log out</a></li>
+           
         </ul>
     </nav>
-    <h1>Book Library</h1>
+    <h1>COMIC Library</h1>
 
     <!-- Search Bar -->
     <div class="search-bar" style="text-align: center; margin-bottom: 20px;">
         <form method="GET" action="" style="display: inline-block; max-width: 500px; width: 100%; text-align: center;">
             <input type="text" name="search" value="{{ search_query }}" placeholder="Search by title or author" style="width: 80%; padding: 10px; border-radius: 20px; border: 1px solid #ddd; font-size: 16px; margin-right: 10px;">
-            <button type="submit" style="background-color: #3498db; padding: 10px 20px; border-radius: 20px; border: none; color: white; font-size: 16px; cursor: pointer;">
+            <button type="submit" style="background-color: #e67e22; padding: 10px 20px; border-radius: 20px; border: none; color: white; font-size: 16px; cursor: pointer;">
                 <i class="fas fa-search"></i> Search
             </button>
         </form>

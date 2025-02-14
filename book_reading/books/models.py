@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
@@ -11,15 +12,19 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+from django.db import models
+from django.contrib.auth.models import User
+from .models import Book
+
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
-    user = models.CharField(max_length=255)
-    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
-    comment = models.TextField()  # Make sure this line exists
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])  # Ratings from 1 to 5
+    comment = models.TextField()
+    reated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f'Review for {self.book.title} by {self.user}'
-    
+        return f"Review for {self.book.title} by {self.user.username}"
 
 
 
@@ -65,3 +70,4 @@ class Profile(models.Model):
 
 
 # models.py
+

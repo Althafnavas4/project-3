@@ -11,8 +11,9 @@
     <style>
         /* Background styling */
         .bodybg {
-            background-image: url("../static/ornate-floral-pattern-symbolizes-chinese-winter-celebration-generated-by-ai.jpg");
+            background-image: url("../static/R.jpg");
             background-size: cover;
+            background-position: center center;
             background-attachment: fixed;
             background-repeat: no-repeat;
             min-height: 100vh;
@@ -148,6 +149,14 @@
             transform: translateY(-50%);
             cursor: pointer;
         }
+
+        /* For mobile devices, disable background attachment fixed */
+        @media (max-width: 767px) {
+            .bodybg {
+                background-attachment: scroll;
+            }
+        }
+
     </style>
 </head>
 <body class="bodybg">
@@ -168,11 +177,7 @@
             <br>
             <a href="{% url 'register' %}">REGISTER</a>
             <br>
-           
 
-            <!-- Button linking to the user_home3 view -->
-            <br><br>
-           
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
