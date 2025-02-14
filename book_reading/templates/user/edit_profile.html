@@ -5,116 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
+        /* General Styling */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #111; /* Dark background */
+            color: #ff6600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
         }
 
         .container {
-            width: 80%;
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 30px;
-            background-color: #fff;
+            width: 100%;
+            max-width: 500px;
+            background: #222;
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3);
+            animation: fadeIn 0.5s ease-in-out;
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
-            color: #4CAF50;
-            margin-bottom: 20px;
-            font-size: 2rem;
+            color: #ff6600;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
         }
 
-        .info-card {
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
+        /* Form Styling */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            text-align: left;
         }
 
         .form-group label {
             font-size: 1rem;
-            color: #333;
+            color: #ff6600;
             font-weight: bold;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
-            border: 1px solid #ddd;
+            border: 1px solid #ff6600;
             font-size: 1rem;
-            background-color: #fafafa;
+            background-color: #333;
+            color: white;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #ff4500;
+            box-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
+            outline: none;
         }
 
         .form-group input[type="file"] {
             border: none;
-            padding: 8px;
-            background-color: #fafafa;
+            background: none;
+            padding: 5px;
         }
 
-        .edit-profile {
-            background-color: #4CAF50;
-            color: white;
+        /* Buttons */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .button {
+            background: #ff6600;
+            color: black;
             padding: 12px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1rem;
-            width: 100%;
+            font-size: 1rem;
             text-align: center;
-            margin-top: 10px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            transition: background 0.3s ease, transform 0.3s ease;
+            width: 48%;
         }
 
-        .edit-profile:hover {
-            background-color: #45a049;
+        .button:hover {
+            background: #e65c00;
             transform: scale(1.05);
         }
 
-        a {
-            display: block;
-            text-decoration: none;
-            color: #4CAF50;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1rem;
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        a:hover {
-            text-decoration: underline;
-        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
 
-        .cancel-link {
-            display: inline-block;
-            font-size: 1rem;
-            color: #555;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            padding: 8px 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-            text-align: center;
+            .button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
-
-        .cancel-link:hover {
-            background-color: #f4f6f9;
-            border-color: #ccc;
-        }
-
     </style>
 </head>
 <body>
@@ -126,17 +140,16 @@
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         
-        <!-- Display profile editing form fields -->
-        <div class="info-card">
+        <div class="form-group">
             {{ form.as_p }}
         </div>
 
-        <!-- Buttons -->
-        <button type="submit" class="edit-profile">Save Changes</button>
+        <!-- Buttons Container -->
+        <div class="button-container">
+            <button type="submit" class="button">Save Changes</button>
+            <a href="{% url 'user_profile' %}" class="button" style="text-align: center; line-height: 2.5;">Back</a>
+        </div>
     </form>
-
-    <!-- Cancel Link -->
-    <a href="{% url 'user_profile' %}" class="cancel-link">Cancel</a>
 </div>
 
 </body>

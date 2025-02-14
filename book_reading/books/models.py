@@ -67,7 +67,22 @@ class Profile(models.Model):
         return f"{self.user.username}'s Profile"
 
 
+class Chapter(models.Model):
+    book = models.ForeignKey(Book, related_name="chapters", on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    cover_image = models.ImageField(upload_to='chapter_covers/', blank=True, null=True)
+    file = models.FileField(upload_to='chapter_files/', blank=True, null=True)
+    number = models.PositiveIntegerField(default=1)  # Auto-number field
 
+    class Meta:
+        ordering = ['number']  # Always show chapters in order
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only set number when creating a new chapter
+            last_chapter = Chapter.objects.filter(book=self.book).order_by('-number').first()
+            self.number = last_chapter.number + 1 if last_chapter else 1
+        super().save(*args, **kwargs)
 
 # models.py
 

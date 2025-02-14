@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ chapter.title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0b0c10;
+            color: #ff6600;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #1f2833;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: #ff6600;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px 15px;
+            transition: 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #e65c00;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto 30px auto;
+            background-color: #222;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            background: #ff6600;
+            color: #111;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .button:hover {
+            background: #e65c00;
+            transform: scale(1.05);
+        }
+
+        .back-button {
+            background: #444;
+            color: white;
+            padding: 10px 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                margin-top: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="{% url 'book_list' %}"><i class="fas fa-home"></i> Home</a>
+        <a href="{% url 'book_detail' chapter.book.id %}"><i class="fas fa-book"></i> Book Details</a>
+    </div>
+
+    <div class="container">
+        <h1>Chapter {{ chapter.number }}: {{ chapter.title }}</h1>
+        <p>{{ chapter.content }}</p>
+
+        {% if chapter.cover_image %}
+            <img src="{{ chapter.cover_image.url }}" alt="Chapter Cover">
+        {% endif %}
+
+        <br>
+        <a href="{% url 'book_detail' chapter.book.id %}" class="button"><i class="fas fa-arrow-left"></i> Back to Book</a>
+        <a href="{% url 'pdf_viewer' chapter.book.id %}" class="button"><i class="fas fa-file-pdf"></i> View PDF</a>
+        <a href="{% url 'download_book' chapter.book.id %}" class="button" id="download-btn"><i class="fas fa-download"></i> Download</a>
+    </div>
+
+    <script>
+        document.getElementById('download-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+            alert("Your book is downloading!");
+            setTimeout(function() {
+                window.location.href = event.target.href;
+            }, 2000);
+        });
+    </script>
+
+</body>
+</html>

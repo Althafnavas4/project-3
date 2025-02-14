@@ -1,15 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Review</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book & Manage Chapters</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #34495e;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #e67e22;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-group {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #34495e;
+            color: #ecf0f1;
+        }
+
+        input[type="file"] {
+            background-color: #2c3e50;
+            padding: 5px;
+        }
+
+        .chapter-container {
+            margin-top: 20px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .chapter-form {
+            background-color: #2c3e50;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .buttons-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #e67e22;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d35400;
+        }
+
+        .add-chapter-btn {
+            background-color: #27ae60;
+        }
+
+        .add-chapter-btn:hover {
+            background-color: #219150;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: #e67e22;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            color: #d35400;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Add Review for {{ book.title }}</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Review</button>
-    </form>
-    <a href="{% url 'book_list' %}">Back to Book List</a>
+
+    <div class="container">
+        <h1>Edit "{{ book.title }}" & Manage Chapters</h1>
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="input-group">
+                <label for="{{ book_form.title.id_for_label }}">Book Title:</label>
+                {{ book_form.title }}
+            </div>
+
+            <div class="input-group">
+                <label for="{{ book_form.author.id_for_label }}">Author:</label>
+                {{ book_form.author }}
+            </div>
+
+            <div class="input-group">
+                <label for="{{ book_form.cover_image.id_for_label }}">Cover Image:</label>
+                {{ book_form.cover_image }}
+            </div>
+
+            <div class="input-group">
+                <label for="{{ book_form.description.id_for_label }}">Description:</label>
+                {{ book_form.description }}
+            </div>
+
+            <div class="chapter-container">
+                <h2>Chapters</h2>
+                {{ chapter_formset.management_form }}
+
+                <div id="chapter-forms">
+                    {% for form in chapter_formset %}
+                        <div class="chapter-form">
+                            <h3>Chapter {{ forloop.counter }}</h3>
+                            
+                            <label for="{{ form.title.id_for_label }}">Chapter Title:</label>
+                            {{ form.title }}
+
+                            <label for="{{ form.content.id_for_label }}">Chapter Content:</label>
+                            {{ form.content }}
+
+                            <label for="{{ form.cover_image.id_for_label }}">Cover Image:</label>
+                            {{ form.cover_image }}
+
+                            {% if form.instance.pk %}
+                                <label for="{{ form.DELETE.id_for_label }}">Delete Chapter:</label>
+                                {{ form.DELETE }}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="buttons-container">
+                <button type="submit">Save Changes</button>
+                <button type="button" class="add-chapter-btn" id="addChapter">+ Add Chapter</button>
+            </div>
+        </form>
+
+        <a href="{% url 'book_detail' book.id %}" class="back-link">Back to Book Details</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let chapterFormContainer = document.getElementById("chapter-forms");
+            let addChapterButton = document.getElementById("addChapter");
+            let totalForms = document.querySelector("#id_chapter_set-TOTAL_FORMS");
+
+            // Get a template for empty chapter form
+            let emptyFormTemplate = document.createElement("div");
+            emptyFormTemplate.innerHTML = "{{ chapter_formset.empty_form.as_p|escapejs }}";
+
+            addChapterButton.addEventListener("click", function() {
+                let formNum = Number(totalForms.value); // Get current form count
+                let newFormHTML = emptyFormTemplate.innerHTML.replace(/__prefix__/g, formNum);
+                
+                let newFormDiv = document.createElement("div");
+                newFormDiv.classList.add("chapter-form");
+                newFormDiv.innerHTML = newFormHTML;
+                chapterFormContainer.appendChild(newFormDiv);
+
+                totalForms.value = formNum + 1; // Update total form count
+            });
+        });
+    </script>
 </body>
 </html>

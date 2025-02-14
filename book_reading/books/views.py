@@ -139,41 +139,53 @@ def edit_book(request, pk):
     return render(request, 'admin/book_change_form.html', {'form': form, 'book': book})
 
 # Add Review (for users)
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Book, Review
+from .forms import ReviewForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def add_review(request, pk):
     book = get_object_or_404(Book, pk=pk)
+    
+    # Ensure user has a profile and it is complete
+    user_profile = request.user.profile
+    if not user_profile.name or not user_profile.profile_picture:
+        messages.warning(request, "Please complete your profile before adding a review.")
+        return redirect('edit_profile')  # Redirect to profile edit page
+
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
             review.book = book
+            review.user = request.user  # Assign the user to the review
             review.save()
             messages.success(request, 'Review added successfully.')
-            return redirect('book_list')
+            return redirect('book_detail', pk=pk)
     else:
         form = ReviewForm()
+
     return render(request, 'user/add_review.html', {'form': form, 'book': book})
+
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Book, Review
+from .models import Book, Chapter, Review, Profile
 from .forms import ReviewForm
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Profile
 
 def book_detail(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
+    chapters = Chapter.objects.filter(book=book).order_by("number")
+ # Fetch chapters by order
 
     user_profile = None
     if request.user.is_authenticated:
-        try:
-            user_profile = request.user.profile
-        except Profile.DoesNotExist:
-            user_profile = None
+        user_profile = getattr(request.user, "profile", None)  # Get profile safely
 
     reviews = Review.objects.filter(book=book)
-
-    # Create a range for the rating
     star_range = [1, 2, 3, 4, 5]
 
     if request.method == 'POST' and request.user.is_authenticated:
@@ -189,13 +201,15 @@ def book_detail(request, book_id):
 
     context = {
         'book': book,
+        'chapters': chapters,  # Include chapters
         'reviews': reviews,
         'form': form,
         'user_profile': user_profile,
-        'star_range': star_range,  # Add this to context
+        'star_range': star_range,
     }
 
     return render(request, 'user/book_detail.html', context)
+
 
 
 # Optionally, you may want to allow authenticated users to delete their reviews:
@@ -390,11 +404,53 @@ def download_book(request, book_id):
 
 
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Book
+
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    book.delete()
+    messages.success(request, "Book deleted successfully.")
+    return redirect('manage_books')  # Redirect to the book management page
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Book, Chapter
+from .forms import ChapterFormSet
+
+def add_chapters_to_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+
+    if request.method == "POST":
+        chapter_formset = ChapterFormSet(request.POST, request.FILES, instance=book)
+
+        if chapter_formset.is_valid():
+            chapters = chapter_formset.save(commit=False)
+            existing_chapters = book.chapters.count()
+
+            for index, chapter in enumerate(chapters):
+                if not chapter.pk:
+                    chapter.number = existing_chapters + index + 1
+                chapter.book = book
+                chapter.save()
+
+            return redirect('book_detail', book_id=book.id)
+
+    else:
+        chapter_formset = ChapterFormSet(instance=book)
+
+    return render(request, 'admin/add_chapter.html', {
+        'book': book,
+        'chapter_formset': chapter_formset
+    })
 
 
 
 
+from django.shortcuts import render, get_object_or_404
+from .models import Chapter
 
-
-
-
+def chapter_detail(request, pk):
+    chapter = get_object_or_404(Chapter, pk=pk)
+    return render(request, "user/chapter_detail.html", {"chapter": chapter})

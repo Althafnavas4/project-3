@@ -23,6 +23,10 @@ urlpatterns = [
     path('upload-profile-picture/', views.upload_profile_picture, name='upload_profile_picture'),
     path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),
     path('book/download/<int:book_id>/', views.download_book, name='download_book'),
+    path('book/delete/<int:book_id>/', views.delete_book, name='delete_book'),
+    path('book/<int:book_id>/manage-chapters/', views.add_chapters_to_book, name='manage_chapters'),
+    path("chapter/<int:pk>/", views.chapter_detail, name="chapter_detail"),
+   
    
 
 

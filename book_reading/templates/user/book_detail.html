@@ -4,66 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book.title }}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #2c2c2c;
+        * {
             margin: 0;
             padding: 0;
-            color: #f2f2f2;
-            line-height: 1.6;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #111;
+            color: #ff6600;
+            text-align: center;
+            padding: 20px;
         }
 
         /* Navigation Bar */
         nav {
+            display: flex;
+            justify-content: center;
             background-color: #333;
-            padding: 10px 0;
-            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
         nav a {
-            color: #f39c12;
-            padding: 14px 20px;
+            color: #ff6600;
             text-decoration: none;
             font-size: 1.1rem;
-            margin: 0 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+            margin: 0 15px;
+            transition: color 0.3s;
         }
 
         nav a:hover {
-            background-color: #f39c12;
-            color: #333;
+            color: #fff;
         }
 
-        h1, h3 {
-            color: #f39c12;
-            text-align: center;
-            margin: 0 0 20px 0;
-        }
-
+        /* Container */
         .container {
-            max-width: 960px;
+            max-width: 800px;
             margin: 30px auto;
             background-color: #333;
+            padding: 25px;
             border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            background-color: #444;
-            overflow: hidden;
-        }
-
-        .book-cover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
             text-align: center;
-            margin-bottom: 30px;
         }
 
+        /* Book Cover */
         .book-cover img {
-            max-width: 250px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 220px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
         }
 
@@ -71,58 +67,71 @@
             transform: scale(1.05);
         }
 
-        .book-details {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .book-details h3 {
-            font-size: 1.3rem;
-            color: #f39c12;
-            margin: 0 0 15px 0;
-        }
-
-        .book-description {
-            margin: 20px 0;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #ddd;
-            text-align: justify;
-        }
-
+        /* Buttons */
         .button {
-            display: block;
-            text-align: center;
-            background-color: #f39c12;
-            color: white;
+            display: inline-block;
+            background: #ff6600;
+            color: #111;
             padding: 12px 20px;
             border-radius: 6px;
             text-decoration: none;
             font-size: 1.1rem;
             font-weight: bold;
-            margin: 30px 0;
-            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 15px;
+            transition: all 0.3s ease-in-out;
         }
 
         .button:hover {
-            background-color: #e67e22;
-            transform: translateY(-2px);
+            background: #e65c00;
+            transform: scale(1.05);
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
+        /* Reviews Section */
+        .review-section {
+            margin-top: 30px;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-            .book-cover img {
-                max-width: 200px;
-            }
+        .review {
+            background: rgba(255, 165, 0, 0.15);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            position: relative;
+        }
 
-            .button {
-                font-size: 1rem;
-                padding: 10px 18px;
-            }
+        .review .rating {
+            color: #ff6600;
+        }
+
+        .review .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .review .delete-btn:hover {
+            background: darkred;
+        }
+
+        /* User Profile */
+        .user-profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #ff6600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         /* Success Message */
@@ -130,47 +139,150 @@
             color: #4CAF50;
             font-size: 1.1rem;
             margin-top: 20px;
-            text-align: center;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+        }
+        /* Chapters Section */
+        .chapters-section {
+            margin-top: 30px;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .chapters-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .chapters-section li {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .chapters-section a {
+            color: #ff6600;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .chapters-section a:hover {
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav>
         <a href="{% url 'favorite_books' %}">Favorites</a>
         <a href="{% url 'book_list' %}">Home</a>
         <a href="{% url 'book_logout' %}">Log out</a>
     </nav>
 
-    <!-- Displaying messages -->
-    
-
     <div class="container">
         <h1>{{ book.title }}</h1>
         <div class="book-cover">
             <img src="{{ book.cover_image.url }}" alt="Cover Image">
         </div>
-        <div class="book-details">
-            <h3>by {{ book.author }}</h3>
-            <p class="book-description">{{ book.description }}</p>
-            <a href="{% url 'pdf_viewer' book.id %}" class="button">Read Book</a>
-            <!-- Download Button -->
-            <a href="{% url 'download_book' book.id %}" class="button" id="download-btn">Download Book</a>
+        <h3>by {{ book.author }}</h3>
+        <p>{{ book.description }}</p>
+
+        <a href="{% url 'pdf_viewer' book.id %}" class="button">View PDF</a>
+        <a href="{% url 'download_book' book.id %}" class="button" id="download-btn">Download</a>
+
+        <div id="success-message" class="success-message">Your book is downloading!</div>
+        <div class="chapters-section">
+            <h2>Chapters</h2>
+            <ul>
+                {% for chapter in book.chapters.all %}
+    <a href="{% url 'chapter_detail' pk=chapter.id %}">
+        {{ chapter.number }}. {{ chapter.title }}
+    </a>
+    <br>
+{% endfor %}
+
+            </ul>
         </div>
 
-        <div id="success-message" class="success-message" style="display:none;">Your book is downloading!</div>
+
+
+        <div class="review-section">
+            <h2>Reviews</h2>
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review">
+                    <p>
+                        {% if review.user.profile.profile_picture %}
+                            <img src="{{ review.user.profile.profile_picture.url }}" alt="Profile Picture" style="width: 40px; height: 40px; border-radius: 50%;">
+                        {% else %}
+                            <img src="https://via.placeholder.com/40" alt="Default Profile Picture" style="width: 40px; height: 40px; border-radius: 50%;">
+                        {% endif %}
+                        
+                        <strong>{{ review.user.profile.name|default:"Anonymous" }}</strong> - 
+                        <span class="rating">
+                            {% for _ in star_range %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </p>
+                    <p>{{ review.comment }}</p>
+
+                    {% if review.user == request.user %}
+                        <form method="post" action="{% url 'delete_review' review.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p>No reviews yet. Be the first to review!</p>
+                {% endfor %}
+            </div>
+
+            {% if user.is_authenticated %}
+                {% if not user.profile.name or not user.profile.profile_picture %}
+                    <script>
+                        alert("Please complete your profile before reviewing.");
+                        window.location.href = "{% url 'edit_profile' %}";
+                    </script>
+                {% endif %}
+
+                <div class="user-profile">
+                    {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture.url }}" alt="Your Profile Picture">
+                    {% else %}
+                        <img src="https://via.placeholder.com/80" alt="Default Profile Picture">
+                    {% endif %}
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="button">Submit Review</button>
+                </form>
+            {% else %}
+                <p><a href="{% url 'login' %}" class="button">Log in</a> to write a review.</p>
+            {% endif %}
+        </div>
     </div>
 
     <script>
-        // JavaScript to show a message when the download button is clicked
         document.getElementById('download-btn').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default action (like navigating to another page)
-            // Show the success message
+            event.preventDefault();
             document.getElementById('success-message').style.display = 'block';
-            // Optionally, redirect to the actual download link after a short delay
             setTimeout(function() {
-                window.location.href = event.target.href; // Navigate to the download URL
-            }, 2000); // 2 seconds delay
+                window.location.href = event.target.href;
+            }, 2000);
         });
     </script>
 </body>
