@@ -8,6 +8,19 @@ class Book(models.Model):
     cover_image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
     file = models.FileField(upload_to='book_files/', null=True, blank=True)
     published_date = models.DateField()
+    
+      # If you need to apply custom validations, for example:
+    def clean_cover_image(self):
+        cover_image = self.cleaned_data.get('cover_image')
+        if cover_image and not cover_image.name:
+            raise forms.ValidationError("Please upload a cover image.")
+        return cover_image
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if file and not file.name:
+            raise forms.ValidationError("Please upload a file.")
+        return file
 
     def __str__(self):
         return self.title

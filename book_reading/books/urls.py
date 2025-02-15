@@ -1,5 +1,11 @@
 from django.urls import path
 from . import views
+from .views import (
+    CustomPasswordResetView,
+    CustomPasswordResetDoneView,
+    CustomPasswordResetConfirmView,
+    CustomPasswordResetCompleteView,
+)
 
 urlpatterns = [
 
@@ -27,6 +33,17 @@ urlpatterns = [
     path('book/<int:book_id>/manage-chapters/', views.add_chapters_to_book, name='manage_chapters'),
     path("chapter/<int:pk>/", views.chapter_detail, name="chapter_detail"),
    
+   
+   
+   
+   
+   
+   
+    path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+
    
 
 

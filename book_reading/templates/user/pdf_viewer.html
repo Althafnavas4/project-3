@@ -84,19 +84,22 @@
             display: flex;
             width: 100%;
             max-width: 960px;
-            height: 721px;
             margin: 30px auto;
             overflow: hidden;
             background-color: #2c3e50; /* Dark background for the PDF container */
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             border: 1px solid #f39c12; /* Orange border */
+            flex-wrap: wrap; /* Allow page containers to wrap when needed */
         }
 
         /* PDF page container for side by side */
         .page {
             flex: 1;
             display: inline-block;
+            max-width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         /* Controls Styling */
@@ -178,7 +181,6 @@
             #pdf-container {
                 flex-direction: column;
                 height: auto;
-                width: 100%;
                 margin: 20px 0;
             }
 
@@ -219,6 +221,11 @@
             .page-controls button {
                 padding: 8px 12px;
                 font-size: 12px;
+            }
+
+            /* Further adjustments for PDF page */
+            .page {
+                padding: 5px;
             }
         }
 
@@ -275,7 +282,7 @@
             });
         }
 
-        // Render two pages side by side
+        // Render one or two pages based on screen width
         function renderPages(pageNum) {
             // Clear the container
             var container = document.getElementById('pdf-container');

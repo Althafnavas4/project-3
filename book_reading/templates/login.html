@@ -177,6 +177,8 @@
             <br>
             <a href="{% url 'register' %}">REGISTER</a>
             <br>
+            <a href="{% url 'password_reset' %}" class="btn-link">Forgot Password?</a>
+            <br>
 
             {% if messages %}
                 {% for message in messages %}

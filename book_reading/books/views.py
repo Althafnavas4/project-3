@@ -36,6 +36,43 @@ def book_login(req):
     else:
         return render(req,'login.html')
     
+    
+    
+    
+    
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils.crypto import get_random_string
+
+# Mock function to simulate email sending for verification
+from django.urls import reverse_lazy
+from django.contrib.auth.views import (
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView, 
+    PasswordResetCompleteView
+)
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'password_reset.html'
+    email_template_name = 'password_reset_email.html'
+    subject_template_name = 'password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password_reset_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'password_reset_complete.html'
+    
 
 
 
@@ -105,6 +142,10 @@ def book_list(request):
     return render(request, 'user/book_list.html', {'page_obj': page_obj, 'search_query': search_query})
 
 # Add Book (Admin)
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import BookForm
+
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
@@ -113,15 +154,32 @@ def add_book(request):
             messages.success(request, 'Book added successfully.')
             return redirect('manage_books')
         else:
-            messages.error(request, 'Failed to add book. Please try again.')
+            # Custom validation messages if necessary
+            if not form.cleaned_data.get('cover_image'):
+                messages.error(request, 'Cover image is required.')
+            if not form.cleaned_data.get('file'):
+                messages.error(request, 'Book file is required.')
     else:
         form = BookForm()
+    
     return render(request, 'admin/book_add_form.html', {'form': form})
 
+
+
 # Manage Books (Admin)
+from django.shortcuts import render
+from django.db.models import Q  # Import Q for filtering
+from .models import Book
+
 def manage_books(request):
+    query = request.GET.get('search', '')
     books = Book.objects.all()
-    return render(request, 'admin/manage_books.html', {'books': books})
+    
+    if query:
+        books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
+    
+    return render(request, 'admin/manage_books.html', {'books': books, 'search_query': query})
+
 
 # Edit Book (Admin)
 def edit_book(request, pk):

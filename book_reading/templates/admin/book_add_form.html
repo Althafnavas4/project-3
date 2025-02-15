@@ -16,7 +16,7 @@
             align-items: center;
             height: 100vh;
             color: #ecf0f1; /* Light text for contrast */
-            box-sizing: border-box; /* Ensures padding/border is included in width/height calculations */
+            box-sizing: border-box;
         }
 
         .container {
@@ -24,10 +24,9 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            width: 100%; /* Make container width 100% of the available space */
-            max-width: 700px; /* Ensures the container doesn't stretch too much */
+            width: 100%;
+            max-width: 700px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-sizing: border-box; /* Ensures padding/border is included in width/height */
         }
 
         .container:hover {
@@ -36,7 +35,7 @@
         }
 
         h1 {
-            color: #e67e22; /* Orange color for the title */
+            color: #e67e22;
             font-size: 26px;
             margin-bottom: 25px;
             font-weight: 700;
@@ -47,10 +46,9 @@
         form {
             display: flex;
             flex-direction: column;
-            gap: 0px;
+            gap: 20px;
         }
 
-        /* Input fields */
         input,
         select,
         textarea {
@@ -59,16 +57,16 @@
             border: 1px solid #ddd;
             font-size: 16px;
             outline: none;
-            background-color: #34495e; /* Dark input background */
-            color: #ecf0f1; /* Light text */
+            background-color: #34495e;
+            color: #ecf0f1;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         input:focus,
         select:focus,
         textarea:focus {
-            border-color: #e67e22; /* Orange border on focus */
-            box-shadow: 0 0 8px rgba(230, 126, 34, 0.3); /* Orange shadow on focus */
+            border-color: #e67e22;
+            box-shadow: 0 0 8px rgba(230, 126, 34, 0.3);
         }
 
         textarea {
@@ -78,7 +76,7 @@
 
         /* Button Styling */
         button {
-            background-color: #e67e22; /* Orange button */
+            background-color: #e67e22;
             color: white;
             padding: 12px;
             border-radius: 8px;
@@ -90,67 +88,70 @@
         }
 
         button:hover {
-            background-color: #d35400; /* Darker orange on hover */
+            background-color: #d35400;
         }
 
         button:active {
-            background-color: #e67e22; /* Back to the main orange color when pressed */
+            background-color: #e67e22;
             transform: translateY(2px);
         }
 
-        /* Link Styling */
-        a {
-            display: inline-block;
-            margin-top: 15px;
-            color: #e67e22; /* Orange link */
-            text-decoration: none;
-            font-weight: 600;
+        /* Error Message Styling */
+        .error-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #c0392b; /* Red color for error */
+            color: white;
+            border-radius: 5px;
             text-align: center;
-            transition: color 0.3s;
         }
 
-        a:hover {
-            color: #d35400; /* Darker orange on hover */
-            text-decoration: underline;
+        /* Success Message Styling */
+        .success-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #27ae60; /* Green color for success */
+            color: white;
+            border-radius: 5px;
+            text-align: center;
         }
 
-        /* Icon for button (optional) */
-        .icon-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        /* Error List Styling */
+        .error-list {
+            color: #c0392b;
+            background-color: #f8d7da;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
         }
 
-        .icon-button svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
+        /* Back Button Styling */
+        .back-btn {
+            background-color: #16a085; /* Teal color */
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .back-btn:hover {
+            background-color: #1abc9c;
+        }
+
+        .back-btn:active {
+            background-color: #16a085;
+            transform: translateY(2px);
         }
 
         /* Responsive Styles */
-        /* Tablet and Laptop screens (768px to 1200px) */
-        @media (min-width: 768px) and (max-width: 1200px) {
-            .container {
-                width: 80%;
-                padding: 40px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            button {
-                font-size: 16px;
-                padding: 12px;
-            }
-
-            a {
-                font-size: 16px;
-            }
-        }
-
-        /* For smaller screens (max-width: 768px) */
         @media (max-width: 768px) {
             .container {
                 width: 90%;
@@ -165,33 +166,7 @@
                 font-size: 16px;
                 padding: 10px;
             }
-
-            a {
-                font-size: 14px;
-            }
         }
-
-        /* For mobile screens (max-width: 480px) */
-        @media (max-width: 380px) {
-            .container {
-                width: 95%;
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            button {
-                font-size: 14px;
-                padding: 10px;
-            }
-
-            a {
-                font-size: 12px;
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -200,14 +175,54 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="icon-button">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6">
-                    <path d="M5 10a1 1 0 011 1v3h3a1 1 0 011 1v2a1 1 0 01-1 1h-3v3a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3H4a1 1 0 01-1-1v-2a1 1 0 011-1h3v-3a1 1 0 011-1h2a1 1 0 011 1v3h3a1 1 0 011 1v2a1 1 0 01-1 1h-3v3a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3h-3a1 1 0 01-1-1v-2a1 1 0 011-1h3v-3a1 1 0 011-1h2z"/>
-                </svg>
+
+            <!-- Display form errors for each field -->
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="error-list">
+                        <strong>{{ field.label }}:</strong>
+                        <ul>
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <button type="submit">
                 Add Book
             </button>
         </form>
-        <a href="{% url 'manage_books' %}">Back to Book List</a>
+
+        <!-- Success or Error Message -->
+        {% if messages %}
+            <div class="message {% if messages.tags == 'success' %}success-message{% else %}error-message{% endif %}">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <a href="{% url 'manage_books' %}" class="back-btn">
+            Back to Book List
+        </a>
     </div>
+
+    <script>
+        function refreshPage() {
+            // Reload the page
+            window.location.reload();
+
+            // Show the refresh message
+            const message = document.getElementById('refreshMessage');
+            message.style.display = 'block';
+
+            // Hide the message after 3 seconds
+            setTimeout(function() {
+                message.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
