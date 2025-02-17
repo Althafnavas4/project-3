@@ -21,6 +21,7 @@
             padding: 15px;
             color: white;
             text-align: center;
+            position: relative;
         }
 
         .navbar a {
@@ -34,6 +35,29 @@
 
         .navbar a:hover {
             background-color: #e65c00; /* Darker orange on hover */
+        }
+
+        /* Hamburger Icon */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            top: 18px;
+            right: 20px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 30px;
+            height: 5px;
+            background-color: white;
+            border-radius: 5px;
         }
 
         /* Main Content Styling */
@@ -137,6 +161,30 @@
         }
 
         @media (max-width: 768px) {
+            .navbar a {
+                display: block;
+                padding: 15px;
+                text-align: left;
+            }
+
+            .navbar {
+                text-align: left;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .navbar a {
+                display: none;
+                width: 100%;
+                text-align: left;
+            }
+
+            .navbar.active a {
+                display: block;
+            }
+
             .container {
                 width: 90%;
                 padding: 20px;
@@ -170,6 +218,13 @@
         <a href="{% url 'user_profile' %}">Profile</a>
         <a href="{% url 'favorite_books' %}">Favorite Books</a>
         <a href="{% url  'book_logout' %}">Logout</a>
+
+        <!-- Hamburger Menu for mobile -->
+        <button class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 
     <div class="container">
@@ -223,6 +278,15 @@
         <!-- Link to Edit Profile -->
         <a class="edit-profile-link" href="{% url 'edit_profile' %}">Edit Profile</a>
     </div>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navbar = document.querySelector('.navbar');
+
+        hamburger.addEventListener('click', function () {
+            navbar.classList.toggle('active');
+        });
+    </script>
 
 </body>
 
